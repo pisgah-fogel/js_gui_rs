@@ -3,8 +3,6 @@ extern crate websocket;
 use std::thread;
 use websocket::sync::Server;
 use websocket::OwnedMessage;
-use std::io::Write;
-
 
 // Exemple Chart.js:
 //{
@@ -22,7 +20,7 @@ use std::io::Write;
 //    "options":{}
 //}
 
-pub struct Js_gui {
+pub struct JsGui {
     main_to_server_tx: std::sync::mpsc::Sender<OwnedMessage>,
     server_to_main_rx: std::sync::mpsc::Receiver<OwnedMessage>,
 }
@@ -42,8 +40,8 @@ pub struct Chart<T, V> {
     pub datasets : std::vec::Vec<Dataset<V>>,
 }
 
-impl Js_gui {
-    pub fn new(address: &str) -> Js_gui {
+impl JsGui {
+    pub fn new(address: &str) -> JsGui {
 
         let (server_to_main_tx, server_to_main_rx) = std::sync::mpsc::channel();
         let (main_to_server_tx, main_to_server_rx) = std::sync::mpsc::channel();
@@ -60,7 +58,7 @@ impl Js_gui {
                     return;
                 }
 
-                let mut client = request.use_protocol("rust-websocket").accept().unwrap();
+                let client = request.use_protocol("rust-websocket").accept().unwrap();
 
                 let ip = client.peer_addr().unwrap();
 
@@ -104,13 +102,13 @@ impl Js_gui {
             }
             println!("[v] Websocket server done");
         });
-        return Js_gui {
+        return JsGui {
             main_to_server_tx: main_to_server_tx,
             server_to_main_rx: server_to_main_rx,
         };
     }
-    fn send(&self, cmd: String) {
-        self.main_to_server_tx.send(OwnedMessage::Text(cmd));
+    fn send(&self, cmd: String) -> bool {
+        self.main_to_server_tx.send(OwnedMessage::Text(cmd)).is_ok()
     }
     pub fn receive(&self) -> Option<String> {
         if let Ok(message) = self.server_to_main_rx.try_recv() {
@@ -195,7 +193,7 @@ impl Js_gui {
 }
 
 pub fn print_link() {
-    let srcdir = std::path::PathBuf::from("frontend/websockets.html");
+    let srcdir = std::path::PathBuf::from("frontend/demo.html");
     let path = std::fs::canonicalize(&srcdir);
     match path {
         Ok(path) => {
@@ -206,7 +204,7 @@ pub fn print_link() {
                 println!("Frontend at file://{:}", path.unwrap());
             }
         },
-        Err(e) => println!("Please copy the frontend folder in your project")
+        Err(_e) => println!("Please copy the frontend folder in your project")
     };
 }
 

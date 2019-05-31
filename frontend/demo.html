@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>WebSocket Test</title>
+	</head>
+	<body>
+      <canvas id="myCanvas" width="800" height="500"
+              style="border:1px solid #c3c3c3;">
+          Your browser does not support the canvas element.
+      </canvas>
+      <script src="./Chart.min.js"></script>
+		<script>
+
+     function connect() {
+         var socket = new WebSocket("ws://127.0.0.1:2794", "rust-websocket");
+        function send(element) {
+            var input = document.getElementById(element);
+            socket.send(input.value);
+            input.value = "";
+        }
+         socket.onopen = function() {
+             // subscribe to some channels
+             //socket.send(JSON.stringify({
+                 //.... some message the I must send when I connect ....
+             //}));
+         };
+
+        socket.onmessage = function (event) {
+            if (event.data[0] === '{') {
+                console.log("JSON detected");
+                console.log(event.data);
+                var msg = JSON.parse(event.data);
+
+                var canvas = document.getElementById("myCanvas");
+                var ctx = canvas.getContext("2d");
+                if (msg.type === "rec") {
+                    ctx.fillRect(msg.x,msg.y,msg.w,msg.h);
+                }
+                else if (msg.type === "line") {
+                    ctx.moveTo(msg.x1, msg.y1);
+                    ctx.lineTo(msg.x2, msg.y2);
+                    ctx.stroke();
+                }
+                else if (msg.type === "arc") {
+                    ctx.beginPath();
+                    ctx.arc(msg.x, msg.y, msg.r, msg.s, msg.e);
+                    ctx.stroke();
+                }
+                else if (msg.type === "text") {
+                    ctx.font = msg.font;
+                    ctx.fillText(msg.text, msg.x, msg.y);
+                }
+                else if (msg.type === "color") {
+                    ctx.fillStyle = msg.color;
+                }
+                else if (msg.type === "clear") {
+                    ctx.clearRect(0, 0, 800, 800);
+                }
+                else if (msg.type === "chart") {
+                    new Chart(document.getElementById("myCanvas"),msg.data);
+                }
+            } else {
+                var received = document.getElementById("received");
+                received.innerText = event.data;
+                //var br = document.createElement("BR");
+                //var text = document.createTextNode(event.data);
+                //received.appendChild(br);
+                //received.appendChild(text);
+            }
+        };
+
+         socket.onclose = function(e) {
+             console.log('Socket is closed. Reconnect will be attempted in 1 second.', e.reason);
+             setTimeout(function() {
+                 connect();
+             }, 1000);
+         };
+
+         socket.onerror = function(err) {
+             console.error('Socket encountered error: ', err.message, 'Closing socket');
+             socket.close();
+         };
+     }
+
+     connect();
+
+		</script>
+			<p id="received">
+				<strong>Debug info</strong>
+			</p>
+			<form onsubmit="send('message'); return false">
+				<input type="text" id="message">
+				<input type="submit" value="Send">
+			</form>
+	</body>
+</html>
