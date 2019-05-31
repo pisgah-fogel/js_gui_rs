@@ -1,0 +1,8 @@
+[package]
+name = "js_gui_rs"
+version = "0.1.0"
+authors = ["Phileas Fogg <phileas.fogg@mail.com>"]
+edition = "2018"
+
+[dependencies]
+websocket = "0.22.4"
