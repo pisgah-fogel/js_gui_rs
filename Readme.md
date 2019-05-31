@@ -12,9 +12,6 @@ $ cargo new project_name && cd project_name
 js_gui_rs = { git = "https://github.com/pisgah-fogel/js_gui_rs.git" }
 ```
 
-```bash
-$ cp ~/.cargo/registry/src/github.com-*/js_gui_rs/frontend .
-```
 
 ```Rust
 extern crate js_gui_rs;
@@ -30,6 +27,16 @@ fn main() {
 
 ```bash
 $ cargo build
+```
+
+You have to copy the .html frontend in you project (when running the program will print you a link to this file so you can directly click on the link to open the GUI)
+```bash
+$ cp -r /home/djeck/.cargo/git/checkouts/js_gui_rs-*/*/frontend/ .
+```
+
+You just have to open the demo.html file and enjoy hello world
+```bash
+$ cargo run
 ```
 
 # Development dependency
