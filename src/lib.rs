@@ -4,21 +4,7 @@ use std::thread;
 use websocket::sync::Server;
 use websocket::OwnedMessage;
 
-// Exemple Chart.js:
-//{
-//    "type":"line",
-//    "data":{
-//        "labels":["January","February","March","April","May","June","July"],
-//        "datasets":[{
-//            "label":"My First Dataset",
-//            "data":[65,59,80,81,56,55,40],
-//            "fill":false,
-//            "borderColor":"rgb(75, 192, 192)",
-//            "lineTension":0.1
-//        }]
-//    },
-//    "options":{}
-//}
+mod json;
 
 pub struct JsGui {
     main_to_server_tx: std::sync::mpsc::Sender<OwnedMessage>,
