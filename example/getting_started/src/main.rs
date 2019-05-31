@@ -7,7 +7,11 @@ fn main() {
 
     js_gui.set_fill_style("#FFFF00");
 
-    std::thread::sleep(std::time::Duration::from_millis(2000));
+    std::thread::sleep(std::time::Duration::from_millis(1000));
+
+    js_gui.clear();
+
+    std::thread::sleep(std::time::Duration::from_millis(1000));
 
     js_gui.draw_rect(10,10, 20, 30);
 
@@ -23,13 +27,8 @@ fn main() {
 
     js_gui.draw_text(100, 100, "Hello world!", "30px Arial");
 
-    std::thread::sleep(std::time::Duration::from_millis(1000));
-
-    js_gui.clear();
 
     std::thread::sleep(std::time::Duration::from_millis(1000));
-
-    js_gui.clear();
 
     let data = js_gui_rs::Dataset::<f32> {
         label: String::from("Foo"),
