@@ -73,11 +73,12 @@ mod tests {
     }
 }
 
-trait Jsonify {
+pub trait Jsonify {
     fn new_json() -> String;
     fn append_str(&mut self, label: &str, value: &str);
     fn append_json(&mut self, label: &str, json: &String);
     fn append_vec <T: std::string::ToString> (&mut self, label: &str, array: &std::vec::Vec<T>);
+    fn append_number <T: std::string::ToString> (&mut self, label: &str, value: &T);
     fn append_bool(&mut self, label: &str, value: bool);
 }
 
@@ -145,6 +146,18 @@ impl Jsonify for String {
         } else {
             self.push_str("false");
         }
+        self.push('}'); // close json object
+    }
+    fn append_number <T: std::string::ToString> (&mut self, label: &str, value: &T) {
+        self.pop(); // remove '}'
+        if self.len() > 2 {
+            self.push(',');
+        }
+
+        self.push('"');
+        self.push_str(label);
+        self.push_str("\":");
+        self.push_str(value.to_string().as_str());
         self.push('}'); // close json object
     }
 }

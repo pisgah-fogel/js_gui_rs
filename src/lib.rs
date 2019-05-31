@@ -5,6 +5,7 @@ use websocket::sync::Server;
 use websocket::OwnedMessage;
 
 mod json;
+use crate::json::Jsonify;
 
 pub struct JsGui {
     main_to_server_tx: std::sync::mpsc::Sender<OwnedMessage>,
@@ -107,7 +108,13 @@ impl JsGui {
         }
     }
     pub fn draw_rect(&self, x: i32, y:i32, w: i32, h:i32) {
-        self.send(format!("{{\"type\":\"rec\",\"x\":{},\"y\":{},\"w\":{},\"h\":{}}}", x, y, w ,h));
+        let mut buf = String::new_json();
+        buf.append_str("type", "rec");
+        buf.append_number("x", &x);
+        buf.append_number("y", &y);
+        buf.append_number("w", &w);
+        buf.append_number("h", &h);
+        self.send(buf);
     }
     pub fn draw_line(&self, x1: i32, y1: i32, x2: i32, y2: i32) {
         self.send(format!("{{\"type\":\"line\",\"x1\":{},\"y1\":{},\"x2\":{},\"y2\":{}}}", x1, y1, x2 ,y2));
