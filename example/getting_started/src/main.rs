@@ -34,19 +34,21 @@ fn main() {
         label: String::from("Foo"),
         data: vec![0.5, 0.75, 1.0],
         fill: false,
-        line_tension: 0.1
+        line_tension: 0.1,
+        border_color: String::from("#8e5ea2")
     };
 
     let data2 = js_gui_rs::Dataset::<f32> {
         label: String::from("Bar"),
         data: vec![10.5, 10.75, 10.0],
         fill: false,
-        line_tension: 0.1
+        line_tension: 0.1,
+        border_color: String::from("#3cba9f")
     };
 
     let chart = js_gui_rs::Chart {
         type_: String::from("line"),
-        labels: vec![1.0, 10f32, 11f32],
+        labels: vec![1.0, 2.0, 3.0],
         datasets: vec![data, data2]
     };
 

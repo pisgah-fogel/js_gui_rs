@@ -18,6 +18,7 @@ pub struct Dataset<V> {
     pub data: std::vec::Vec<V>,
     pub fill: bool,
     pub line_tension: f32,
+    pub border_color: String
 }
 
 // Chart.js structure
@@ -133,55 +134,32 @@ impl JsGui {
     }
 
     pub fn draw_chart<T: std::string::ToString, V: std::string::ToString>(&self, chart: &Chart<T, V>) {
-        let mut cmd = String::new();
-        cmd.push_str("{\"type\":\"chart\",\"data\":"); // wrapped
-        cmd.push('{');
-        // type
-        cmd.push_str("\"type\":\"");
-        cmd.push_str(chart.type_.as_str());
-        cmd.push_str("\",");
-        // data
-        cmd.push_str("\"data\":{");
-        //data.labels
-        cmd.push_str("\"labels\":[");
-        for iter in chart.labels.iter() {
-            cmd.push('"');
-            cmd.push_str(iter.to_string().as_str());
-            cmd.push('"');
-            cmd.push(',');
-        }
-        cmd.pop(); // remove last '"'
-        cmd.push_str("],"); // close label
-        //datasets
-        cmd.push_str("\"datasets\":[");
+        let mut datasets_vec_json = vec![];
+
         for dataset in chart.datasets.iter() {
-        cmd.push('{');
-        //data.datasets.label
-        cmd.push_str("\"label\":\"");
-        cmd.push_str(dataset.label.as_str());
-        cmd.push_str("\","); // close label
-        cmd.push_str("\"data\":[");
-        for iter in dataset.data.iter() {
-            cmd.push_str(iter.to_string().as_str());
-            cmd.push(',');
+            let mut dataset_json = String::new_json();
+            dataset_json.append_str("label", dataset.label.as_str());
+            dataset_json.append_vec("data", &dataset.data);
+            dataset_json.append_bool("fill", dataset.fill);
+            dataset_json.append_str("borderColor", dataset.border_color.as_str());
+            dataset_json.append_number("lineTension", &dataset.line_tension);
+            datasets_vec_json.push(dataset_json);
         }
-        cmd.pop(); // remove last '"'
-        cmd.push_str("],");
-        cmd.push_str("\"fill\":false,"); // TODO
-        // TODO borderColor
-        cmd.push_str("\"lineTension\":");
-        cmd.push_str(dataset.line_tension.to_string().as_str());
-        cmd.push_str("},"); // close dataset
-        }
-        cmd.pop(); // remove last '"'
-        cmd.push(']'); // close dataset collection
-        //iterate for datas
-        cmd.push_str("},"); // close data
-        // options
-        cmd.push_str("\"options\":{}");
-        cmd.push('}');
-        cmd.push_str("}"); // close wrapper
-        self.send(cmd);
+
+        let mut data_json = String::new_json();
+        data_json.append_vec("labels", &chart.labels);
+        data_json.append_vec("datasets", &datasets_vec_json);
+
+        let mut chart_json = String::new_json();
+        chart_json.append_str("type", chart.type_.as_str());
+        chart_json.append_json("data", &data_json);
+        chart_json.append_json("options", &String::new_json());
+
+        let mut json = String::new_json();
+        json.append_str("type", "chart");
+        json.append_json("data", &chart_json);
+
+        self.send(json);
     }
 }
 
