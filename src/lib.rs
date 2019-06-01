@@ -12,11 +12,15 @@ pub struct JsGui {
     server_to_main_rx: std::sync::mpsc::Receiver<OwnedMessage>,
 }
 
+
+#[derive(Clone)]
+pub enum FillStyle {False, Origin, Start, End}
+
 // Chart.js dataset
 pub struct Dataset<V> {
     pub label: String,
     pub data: std::vec::Vec<V>,
-    pub fill: bool,
+    pub fill: FillStyle,
     pub line_tension: f32,
     pub border_color: String
 }
@@ -140,7 +144,12 @@ impl JsGui {
             let mut dataset_json = String::new_json();
             dataset_json.append_str("label", dataset.label.as_str());
             dataset_json.append_vec("data", &dataset.data);
-            dataset_json.append_bool("fill", dataset.fill);
+            match &dataset.fill {
+                FillStyle::False => dataset_json.append_str("fill", "false"),
+                FillStyle::Origin => dataset_json.append_str("fill", "origin"),
+                FillStyle::Start => dataset_json.append_str("fill", "start"),
+                FillStyle::End => dataset_json.append_str("fill", "end")
+            };
             dataset_json.append_str("borderColor", dataset.border_color.as_str());
             dataset_json.append_number("lineTension", &dataset.line_tension);
             datasets_vec_json.push(dataset_json);

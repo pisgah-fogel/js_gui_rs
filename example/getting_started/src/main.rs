@@ -33,7 +33,7 @@ fn main() {
     let data = js_gui_rs::Dataset::<f32> {
         label: String::from("Foo"),
         data: vec![0.5, 0.75, 1.0],
-        fill: false,
+        fill: js_gui_rs::FillStyle::False,
         line_tension: 0.1,
         border_color: String::from("#8e5ea2")
     };
@@ -41,7 +41,7 @@ fn main() {
     let data2 = js_gui_rs::Dataset::<f32> {
         label: String::from("Bar"),
         data: vec![10.5, 10.75, 10.0],
-        fill: false,
+        fill: js_gui_rs::FillStyle::Start,
         line_tension: 0.1,
         border_color: String::from("#3cba9f")
     };
