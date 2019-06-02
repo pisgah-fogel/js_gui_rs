@@ -22,7 +22,8 @@ pub struct Dataset<V> {
     pub data: std::vec::Vec<V>,
     pub fill: FillStyle,
     pub line_tension: f32,
-    pub border_color: String
+    pub border_color: String,
+    pub background_color: Option<String>,
 }
 
 // Chart.js structure
@@ -151,6 +152,9 @@ impl JsGui {
                 FillStyle::End => dataset_json.append_str("fill", "end")
             };
             dataset_json.append_str("borderColor", dataset.border_color.as_str());
+            if let Some(background_color) = dataset.background_color.as_ref() {
+                dataset_json.append_str("backgroundColor", background_color.as_str());
+            }
             dataset_json.append_number("lineTension", &dataset.line_tension);
             datasets_vec_json.push(dataset_json);
         }

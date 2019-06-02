@@ -35,7 +35,8 @@ fn main() {
         data: vec![0.5, 0.75, 1.0],
         fill: js_gui_rs::FillStyle::False,
         line_tension: 0.1,
-        border_color: String::from("#8e5ea2")
+        border_color: String::from("#8e5ea2"),
+        background_color: None
     };
 
     let data2 = js_gui_rs::Dataset::<f32> {
@@ -43,7 +44,8 @@ fn main() {
         data: vec![10.5, 10.75, 10.0],
         fill: js_gui_rs::FillStyle::Start,
         line_tension: 0.1,
-        border_color: String::from("#3cba9f")
+        border_color: String::from("rgba(60,150,90,0.9)"),
+        background_color: Some(String::from("rgba(60,150,90,0.1)"))
     };
 
     let chart = js_gui_rs::Chart {
