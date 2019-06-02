@@ -7,5 +7,4 @@
 - [ ] Pie Chart
 - [ ] Advanced tilemaps
 - [ ] Display buffer on the client's side
-- [ ] Popup
 - [ ] Button

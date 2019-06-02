@@ -60,6 +60,9 @@
                 else if (msg.type === "chart") {
                     new Chart(document.getElementById("myCanvas"),msg.data);
                 }
+                else if (msg.type === "alert") {
+                    window.alert(msg.text);
+                }
             } else {
                 var received = document.getElementById("received");
                 received.innerText = event.data;

@@ -137,7 +137,12 @@ impl JsGui {
     pub fn clear(&self) {
         self.send(format!("{{\"type\":\"clear\"}}"));
     }
-
+    pub fn popup(&self, text: &str) {
+        let mut buff = String::new_json();
+        buff.append_str("type","alert");
+        buff.append_str("text",text);
+        self.send(buff);
+    }
     pub fn draw_chart<T: std::string::ToString, V: std::string::ToString>(&self, chart: &Chart<T, V>) {
         let mut datasets_vec_json = vec![];
 

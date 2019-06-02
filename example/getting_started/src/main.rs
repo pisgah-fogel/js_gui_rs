@@ -55,4 +55,7 @@ fn main() {
     };
 
     js_gui.draw_chart(&chart);
+
+    js_gui.popup("Wow !");
+
 }
