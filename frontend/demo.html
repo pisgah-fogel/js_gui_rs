@@ -28,14 +28,26 @@
 
         socket.onmessage = function (event) {
             if (event.data[0] === '{') {
-                console.log("JSON detected");
-                console.log(event.data);
                 var msg = JSON.parse(event.data);
-
                 var canvas = document.getElementById("myCanvas");
                 var ctx = canvas.getContext("2d");
                 if (msg.type === "rec") {
                     ctx.fillRect(msg.x,msg.y,msg.w,msg.h);
+                }
+                else if (msg.type === "img") {
+                    var img = new Image();
+                    img.onload = function () {
+                        if (msg.crop === true) {
+                            ctx.drawImage(img, msg.sx, msg.sy, msg.sw, msg.sh, msg.x, msg.y, msg.w, msg.h);
+                        }
+                        else if (msg.resize === true) {
+                            ctx.drawImage(img, msg.x, msg.y, msg.w, msg.h);
+                        }
+                        else {
+                            ctx.drawImage(img, msg.x, msg.y);
+                        }
+                    };
+                    img.src = msg.src;
                 }
                 else if (msg.type === "line") {
                     ctx.moveTo(msg.x1, msg.y1);
@@ -62,6 +74,9 @@
                 }
                 else if (msg.type === "alert") {
                     window.alert(msg.text);
+                }
+                else {
+                    console.log("Error: No type "+msg.type);
                 }
             } else {
                 var received = document.getElementById("received");

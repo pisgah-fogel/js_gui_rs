@@ -7,28 +7,25 @@ fn main() {
 
     js_gui.set_fill_style("#FFFF00");
 
-    std::thread::sleep(std::time::Duration::from_millis(1000));
-
     js_gui.clear();
 
-    std::thread::sleep(std::time::Duration::from_millis(1000));
+    std::thread::sleep(std::time::Duration::from_millis(5000));
 
     js_gui.draw_rect(10,10, 20, 30);
 
-    std::thread::sleep(std::time::Duration::from_millis(1000));
+    std::thread::sleep(std::time::Duration::from_millis(200));
 
     js_gui.draw_line(10, 10, 50, 100);
 
-    std::thread::sleep(std::time::Duration::from_millis(1000));
+    std::thread::sleep(std::time::Duration::from_millis(200));
 
     js_gui.draw_arc(100, 100, 20, 0f32, 6.2832);
 
-    std::thread::sleep(std::time::Duration::from_millis(1000));
+    std::thread::sleep(std::time::Duration::from_millis(200));
 
     js_gui.draw_text(100, 100, "Hello world!", "30px Arial");
 
-
-    std::thread::sleep(std::time::Duration::from_millis(1000));
+    std::thread::sleep(std::time::Duration::from_millis(200));
 
     let data = js_gui_rs::Dataset::<f32> {
         label: String::from("Foo"),
@@ -54,7 +51,39 @@ fn main() {
         datasets: vec![data, data2]
     };
 
-    js_gui.draw_chart(&chart);
+    //js_gui.draw_chart(&chart);
+
+    std::thread::sleep(std::time::Duration::from_millis(1000));
+    js_gui.clear();
+    std::thread::sleep(std::time::Duration::from_millis(200));
+
+    let mut img1 = js_gui_rs::Image {
+        type_: js_gui_rs::ImageType::Static,
+        source: String::from("img1.jpg"),
+        x: 150,
+        y: 100,
+        resize: Some(js_gui_rs::ImageResize {
+            w: 70,
+            h: 50,
+            crop: Some(js_gui_rs::ImageCrop {
+                sx: 10,
+                sy: 10,
+                sw: 10,
+                sh: 10,
+            }),
+        }),
+    };
+
+    js_gui.draw_image(&img1);
+    std::thread::sleep(std::time::Duration::from_millis(200));
+
+    img1.resize.as_mut().unwrap().crop = None;
+    js_gui.draw_image(&img1);
+    std::thread::sleep(std::time::Duration::from_millis(200));
+
+    img1.resize = None;
+    js_gui.draw_image(&img1);
+    std::thread::sleep(std::time::Duration::from_millis(200));
 
     js_gui.popup("Wow !");
 
