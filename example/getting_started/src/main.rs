@@ -51,7 +51,7 @@ fn main() {
         datasets: vec![data, data2]
     };
 
-    //js_gui.draw_chart(&chart);
+    js_gui.draw_chart(&chart);
 
     std::thread::sleep(std::time::Duration::from_millis(1000));
     js_gui.clear();
