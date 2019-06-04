@@ -7,6 +7,7 @@
 - [ ] Advanced tilemaps
 - [ ] Display buffer on the client's side (JS buffer)
 - [v] translate image to base64
+- [ ] image to base64 without writing to file
 - [ ] Transmit image as base64 and display it
 
 ## Chart.js
