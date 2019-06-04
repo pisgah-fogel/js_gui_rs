@@ -6,3 +6,5 @@ edition = "2018"
 
 [dependencies]
 websocket = "0.22.4"
+png = "0.14.1"
+rustc-serialize = "0.3.24"

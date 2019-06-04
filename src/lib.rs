@@ -7,6 +7,8 @@ use websocket::OwnedMessage;
 mod json;
 use crate::json::Jsonify;
 
+mod vec_png_base64;
+
 pub struct JsGui {
     main_to_server_tx: std::sync::mpsc::Sender<OwnedMessage>,
     server_to_main_rx: std::sync::mpsc::Receiver<OwnedMessage>,
