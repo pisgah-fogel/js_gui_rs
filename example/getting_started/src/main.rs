@@ -85,6 +85,33 @@ fn main() {
     js_gui.draw_image(&img1);
     std::thread::sleep(std::time::Duration::from_millis(200));
 
+    let img2 = js_gui_rs::RawImage {
+        data: vec![
+                    255, 0, 0, 255, // RGBA pixels' value
+                    0, 255, 0, 255,
+                    0, 0, 255, 255,
+                    0, 0, 0, 255,
+                    ],
+        width: 2,
+        height: 2,
+        x: 100,
+        y: 100,
+        resize: Some(js_gui_rs::ImageResize {
+            w: 200,
+            h: 200,
+            crop: None,
+        }),
+    };
+
+    if let Err(e) = js_gui.draw_image_vec(&img2) {
+        match e {
+            js_gui_rs::JsGuiError::WrongDataSize => {
+                println!("[x] JsGui::draw_image_vec: Error wrong image size");
+            },
+        }
+    }
+    std::thread::sleep(std::time::Duration::from_millis(200));
+
     js_gui.popup("Wow !");
 
 }

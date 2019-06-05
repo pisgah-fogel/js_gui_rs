@@ -68,8 +68,13 @@ pub struct RawImage {
     pub resize: Option<ImageResize>,
 }
 
+pub enum JsGuiError {WrongDataSize}
+
 impl JsGui {
-    pub fn draw_image_vec(&self, img: &RawImage) {
+    pub fn draw_image_vec(&self, img: &RawImage) -> Result<(), JsGuiError> {
+        if img.data.len() as u32 != img.width*img.height*4 { // RGBA pixels
+            return Err(JsGuiError::WrongDataSize);
+        }
         let base64: String = vec_png_base64::png_to_base64(img.width, img.height, &img.data);
         let mut buf = String::new_json();
         buf.append_str("type", "img");
@@ -89,6 +94,7 @@ impl JsGui {
             }
         }
         self.send(buf);
+        return Ok(());
     }
     pub fn draw_image(&self, img: &Image) {
         let mut buf = String::new_json();
