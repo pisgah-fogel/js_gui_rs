@@ -8,7 +8,6 @@ use png::HasParameters;
 use std::io::Read;
 
 use rustc_serialize::base64::{ToBase64, MIME};
-use rustc_serialize::hex::{ToHex};
 
 pub fn png_to_file(width: u32, height: u32, array: &std::vec::Vec<u8>) {
     let path = Path::new(r"buffer.png");

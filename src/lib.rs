@@ -59,7 +59,37 @@ pub struct Image {
     pub resize: Option<ImageResize>,
 }
 
+pub struct RawImage {
+    pub data: std::vec::Vec<u8>,
+    pub width: u32,
+    pub height: u32,
+    pub x: i32,
+    pub y: i32,
+    pub resize: Option<ImageResize>,
+}
+
 impl JsGui {
+    pub fn draw_image_vec(&self, img: &RawImage) {
+        let base64: String = vec_png_base64::png_to_base64(img.width, img.height, &img.data);
+        let mut buf = String::new_json();
+        buf.append_str("type", "img");
+        buf.append_str("src", &base64.as_str());
+        buf.append_number("x", &img.x);
+        buf.append_number("y", &img.y);
+        if let Some(resize) = img.resize.as_ref() {
+            buf.append_number("w", &resize.w);
+            buf.append_number("h", &resize.h);
+            buf.append_bool("resize", true);
+            if let Some(crop) = resize.crop.as_ref() {
+                buf.append_number("sx", &crop.sx);
+                buf.append_number("sy", &crop.sy);
+                buf.append_number("sw", &crop.sw);
+                buf.append_number("sh", &crop.sh);
+                buf.append_bool("crop", true);
+            }
+        }
+        self.send(buf);
+    }
     pub fn draw_image(&self, img: &Image) {
         let mut buf = String::new_json();
         buf.append_str("type", "img");
